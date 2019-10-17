@@ -121,12 +121,14 @@ function displayUserData(container, doc) {
     userDiv.id = doc.id;
     // and get the children we want to use
     var nameEdit = userDiv.querySelector('#user_name');
+    var uidEdit = userDiv.querySelector('#user_uid');
     var emailEdit = userDiv.querySelector('#user_email');
     var isAdminCheck = userDiv.querySelector('#user_isAdmin');
     var messageSpan = userDiv.querySelector('#user_message');
     
     // to avoid duplicates, we want our own IDs here
     nameEdit.id = doc.id + '_' + nameEdit.id;
+    uidEdit.id = doc.id + '_' + uidEdit.id;
     emailEdit.id = doc.id + '_' + emailEdit.id;
     isAdminCheck.id = doc.id + '_' + isAdminCheck.id;
     messageSpan.id = doc.id + '_' + messageSpan.id;
@@ -134,6 +136,7 @@ function displayUserData(container, doc) {
 
     // get the data and populate the fields
     var data = doc.data();
+    uidEdit.value = doc.id;
     nameEdit.value = data.name;
     emailEdit.value = data.email;
     isAdminCheck.checked = data.isAdmin == true;
