@@ -23,7 +23,7 @@
 	<script defer src="/__/firebase/init.js"></script>
 
 	<!-- add our page specific javascript here -->
-	<script src="pagejs/profile.js"></script>
+	<script src="pagejs/admin_users.js"></script>
 
 	<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
 	<script src="js/jquery.min.js"></script>
@@ -93,66 +93,51 @@
 	<section id="main" class="wrapper style1">
 		<div class="container">
 			<header class="major">
-				<h2>Profile</h2>
-				<p>View and update your Personal data here...</p>
+				<h4>Administer Users</h4>
+				<p>A remote control over your users, for more functionality go to the <a href="https://console.firebase.google.com/">firebase</a> console...</p>
 			</header>
-			<form id='profile_data' method="post" action="#">
+			<form id='data_form' method="post" action="onPostData()">
+				<header class="major">
+					<h3>User Search</h3>
+				</header>
 				<div class="row uniform">
-					<div class="3u 12u(3)">
-						<span class="image fill">
-							<img id='user_image' src="images/logo.png" alt="users image" />
-							<a class="button special" id='log_out' onclick="logout();">Log out...</a>
-						</span>
+					<div class="4u 12u(3)">
+						<input type="text" name="name" id="name" value="" placeholder="Name" />
+						<label for="name">Name</label>
+						<a class="button special" id='search_name_button' onclick="searchUserNames();">Find...</a>
+					</div>
+					<div class="4u 12u(3)">
+						<input type="email" name="email" id="email" value="" placeholder="Email" />
+						<label for="email">Email</label>
+						<a class="button special" id='search_email_button' onclick="searchUserEmails();">Find...</a>
+					</div>
+					<div class="4u 12u(3)">
+						<a class="button special" id='search_admin_button' onclick="getAllAdministrator();">Find all Administrators</a>
 					</div>
 				</div>
 				<hr>
-				<header class="major">
-					<h3>Personal details</h3>
-				</header>
-				<p>These are typically set from your log-in.</p>
-				<div class="row uniform">
-					<div class="6u 12u(3)">
-						<input type="text" name="name" id="name" value="" placeholder="Name" readonly />
-						<label for="name">Name</label>
+				<div style="display: none;">
+					<!-- hidden template area -->
+					<div id="user_template" class="row uniform" >
+						<div class="4u 12u(3)">
+							<h4>User Name</h4>
+							<input type="text" id="user_name" readonly />
+						</div>
+						<div class="4u 12u(3)">
+							<h4>User Email</h4>
+							<input type="text" id="user_email" readonly />
+						</div>
+						<div class="4u 12u(3)">
+							<h4>Permissions</h4>
+							<input type="checkbox" id="user_isAdmin" />
+							<label id="user_isAdmin_label" for="user_isAdmin">Is Administrator</label>
+						</div>
+						<span id="user_message"></span>
 					</div>
-					<div class="6u 12u(3)">
-						<input type="email" name="email" id="email" value="" placeholder="Email" readonly />
-						<input type="checkbox" id="email-verified" name="email verified" onclick="return false;" />
-						<label for="email-verified">Email Verified</label>
-						<a class="button special" id='send_verification' onclick="sendEmailVerfication();">Send verification email...</a>
-					</div>
+					<hr>
 				</div>
-				<div class="row uniform">
-					<div id="change_password_container" class="6u 12u(3)" style="display: none;">
-						<p>
-							<input type="password" name="password one" id="password_one" value="" />
-						</p>
-						<p>
-							<input type="password" name="password two" id="password_two" value="" />
-						</p>
-						<label for="password_two">Enter a new password (twice)</label>
-						<a class="button" id='reset_password' onclick="resetPassword();">Save</a>
-					</div>
-				</div>
-				<div class="row uniform">
-					<div class="6u 12u(3)">
-						<a class="button" id='edit_profile_button' onclick="enableEdit();">Change Details</a>
-						<a class="button" id='edit_profile_commit_button' onclick="saveEdits();" style="display: none;">Save Changes</a>
-						<a class="button" id='edit_profile_discard_button' onclick="discardEdits();" style="display: none;">Discard Changes</a>
-					</div>
-				</div>
-				<div class="row uniform">
-					<div class="6u 12u(3)">
-						<a class="button" id='change_password_button' onclick="enablePasswordChange();">Change Password</a>
-					</div>
-				</div>
-				<div class="row uniform">
-					<div class="6u 12u(3)" id="delete_button_countdown">
-						<a class="button" onclick="deleteProfileCountdown();">Delete my profile and all data</a>
-					</div>
-					<div class="6u 12u(3)">
-						<a class="button special" style='display:none' id='delete_Profile_button' onclick="deleteProfile();">Delete all ALL profile data Forever</a>
-					</div>
+				<div id="found_user_container" class="row uniform">
+					<!-- this area will be totally cleared each time a search for user is performed-->
 				</div>
 			</form>
 		</div>

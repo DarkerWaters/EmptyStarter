@@ -190,19 +190,19 @@ const firebaseData = {
         if (user && firebase) {
             // get the current UID and get the data in the store for this user
             var userUid = user.uid;
+            var fData = this;
             // get the data for the user
             firebase.firestore().collection('users').doc(userUid).get()
             .then(function(doc) {
                 if (doc && doc.exists) {
                     // do stuff with the data
                     onSuccess(doc.data());
-                } else if (onFailure) {
-                    // report this
-                    onFailure("No document data exists for " + docRef);
-                }
-                else {
-                    // doc.data() will be undefined in this case
-                    console.log("No document data exists for " + docRef);
+                } else {
+                    // log this
+                    console.log("No document data exists for user", user);
+                    // but let's fix it though
+                    var newData = fData.createDefaultUserData(user);
+                    onSuccess(newData);
                 }
             })
             .catch(function(error) {
@@ -213,6 +213,27 @@ const firebaseData = {
             // no firebase
             return null;
         }
+    },
+
+    createDefaultUserData : function (user) {
+        var newUserData = {
+            // setup the blank user data here
+            name: user.displayName,
+            name_lc: user.displayName.toLowerCase(),
+            email: user.email,
+            email_lc: user.email.toLowerCase(),
+            isAdmin: false
+        };
+        firebase.firestore().collection('users').doc(user.uid).set(newUserData, {merge: true})
+            .then(function() {
+                // this worked
+                console.log('added user data', user);
+            })
+            .catch(function(error) {
+                // failed
+                console.log("failed to create the user data", error);
+            });
+        return newUserData;
     },
 
     getUserProfiles : function (user) {
@@ -238,17 +259,7 @@ const firebaseData = {
     },
 
     deleteAllUserData : function(user, onSuccess, onFailure) {
-        // delete all the location shared
-        this.deleteUserShareLocations(user, null,
-            function() {
-                // yey
-            },
-            function(error) {
-                // oops
-                console.log("Failed to delete a shared location for a deleted user account", error);
-            });
-        
-        // and delete the user document we have stored
+        // delete the user document we have stored
         firebase.firestore().collection("users").doc(user.uid).delete().then(function() {
             logout();
         }).catch(function(error) {

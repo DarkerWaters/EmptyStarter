@@ -32,7 +32,9 @@ function ensureUpToDateUserData(user, data) {
         const docRef = firebase.firestore().collection('users').doc(user.uid)
         docRef.update({
             name: user.displayName,
-            email: user.email
+            name_lc: user.displayName.toLowerCase(),
+            email: user.email,
+            email_lc: user.email.toLowerCase()
         }).catch(function(error) {
             console.log("Error updating user information held against them", error);
         });
@@ -60,8 +62,9 @@ function populateUserData() {
         firebaseData.getUserData(user, 
             function(data) {
                 //TODO we have the user data here, set the data correctly
-                
 
+                // be sure to update our map of their name and email etc that we keep a copy of
+                ensureUpToDateUserData(user, data);
             }, function(error) {
                 // this is the failure to get the data, do our best I suppose
                 console.log("Failed to get the firestore user data for " + user + ":", error);
