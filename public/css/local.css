@@ -38,6 +38,7 @@ html, body {
 .sidebar_header{
   width: 100%;
   background: #000000;
+  background-color: whitesmoke;
   position: fixed; 
   top: 0;
   height: 60px !important;
