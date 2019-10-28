@@ -49,9 +49,8 @@
 				<nav id="nav">
 					<ul>
 						<li>
-							<div id="firebaseui-auth-container"></div>
-							<a href="#" id="firebaseSignIn" class="button special">Log In...</a>
-							<p href="#" id="firebaseSignedIn" style="display: none">Logged In...</p>
+							<a href="javascript:signinFirebase();" id="firebaseSignIn" class="button special">Log In...</a>
+							<p href="profile.html" id="firebaseSignedIn" style="display: none">Profile</p>
 						</li>
 						<li><a href="index.html">Home</a></li>
 						<li class='menu_admin' style="display: none">
@@ -79,9 +78,6 @@
 						</li>
 						<li><a href="elements.html">Elements</a></li>
 					</ul>
-					<div id="firebase_login_container" class='floating_fixed' style="display: none;" >
-						<span class="image fit"><img src="images/logo.png" alt="" /></span>
-					</div>
 				</nav>
 			</header>
 
@@ -110,6 +106,12 @@
 
 				<!-- One -->
 				<section id="one" class="sidebar_content wrapper style2">
+					<div class="container">
+						<div class="row uniform">
+							<div id="firebase_login_container" style="padding: 20px;"> </div>
+							<div id="firebaseui-auth-container"></div>
+						</div>
+					</div>
 					
 					<div class="container">
 						<div class="row uniform">
