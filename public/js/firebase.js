@@ -235,6 +235,47 @@ var sanitizeHTML = function (str) {
 
 
 const firebaseData = {
+
+    lcRef : function (str) {
+        if (!str) {
+            return str;
+        }
+        else {
+            // remove all spaces and make it lowercase
+            str = str.toLowerCase().replace(/\s/g,'');
+            // and get rid of anything too weird
+            str = str.replace(/\W/g, '');
+            if (str.length > 1 && str.slice(-1) === 's') {
+                // remove any trailing 's' characters
+                str = str.slice(0, -1);
+            }
+            return str;
+        }
+    },
+
+    lcWords : function(str) {
+        if (!str) {
+            return [];
+        }
+        else {
+            // make the words split from the string
+            var words = [];
+            var toProcess = str.toLowerCase().split(/\s/);
+            for (var i = 0; i < toProcess.length; ++i) {
+                // for each word from the string split, add it to the array
+                var word = toProcess[i];
+                words.push(firebaseData.lcRef(word));
+                // and combine it with all following it
+                for (var j = i + 1; j < toProcess.length; ++j) {
+                    word += toProcess[j];
+                    words.push(firebaseData.lcRef(word));
+                }
+            }
+            // return all the words combined into a nice array of options to search for
+            return words;
+        }
+    },
+
     getUser : function () {
         return firebase.auth().currentUser;
     },
@@ -273,9 +314,9 @@ const firebaseData = {
         var newUserData = {
             // setup the blank user data here
             name: user.displayName,
-            name_lc: user.displayName.toLowerCase(),
+            name_lc: firebaseData.lcRef(user.displayName),
             email: user.email,
-            email_lc: user.email.toLowerCase(),
+            email_lc: firebaseData.lcRef(user.email),
             isAdmin: false
         };
         firebase.firestore().collection('users').doc(user.uid).set(newUserData, {merge: true})
